@@ -181,6 +181,7 @@ textarea{font:inherit;width:100%;min-height:110px;border:1.5px solid var(--line)
 </div>
 
 <script src="data.js"></script>
+<script src="data2.js"></script>
 <script>
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -397,7 +398,8 @@ BUILD.order=(q,area)=>{
   $("#hint").textContent="לחצו על הפריטים לפי הסדר הנכון. לחיצה על משבצת מלאה מרוקנת אותה.";
   const n=q.items.length; const slotsEl=document.createElement("div"); slotsEl.className="slots"; area.appendChild(slotsEl);
   const vals=new Array(n).fill(null); const slots=[];
-  for(let i=0;i<n;i++){ if(i) {const a=document.createElement("span"); a.className="arrow"; a.textContent="←"; slotsEl.appendChild(a);} const s=document.createElement("button"); s.className="slot"; slots.push(s); slotsEl.appendChild(s);
+  const vert=n>3||window.innerWidth<520; if(vert){slotsEl.style.flexDirection="column"; slotsEl.style.alignItems="stretch";}
+  for(let i=0;i<n;i++){ if(i) {const a=document.createElement("span"); a.className="arrow"; a.style.textAlign="center"; a.textContent=vert?"↓":"←"; slotsEl.appendChild(a);} const s=document.createElement("button"); s.className="slot"; slots.push(s); slotsEl.appendChild(s);
     s.onclick=()=>{ if(cur.done||vals[i]==null) return; toks[vals[i]].hidden=false; vals[i]=null; paint(); }; }
   const pool=document.createElement("div"); pool.className="pool"; pool.style.marginTop="12px"; area.appendChild(pool);
   const toks=[]; shuffle(q.items.map((_,i)=>i)).forEach(i=>{const t=document.createElement("button"); t.className="tok"; t.style.cursor="pointer"; t.textContent=q.items[i]; toks[i]=t;
