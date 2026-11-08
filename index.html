@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>משאבי טבע – תרגול</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&display=swap">
+<style>
+:root{
+  --paper:#F3F6FA; --card:#FFFFFF; --ink:#1B2540; --muted:#5B6680; --grid:#E1E8F2; --line:#D3DBE7;
+  --accent:#1F6F66; --accent-ink:#FFFFFF; --accent-soft:#DDEFEC;
+  --good:#2F8A4E; --good-soft:#E1F2E6; --warn:#A8701A; --warn-soft:#F7ECD8; --bad:#B4433A; --bad-soft:#F7E1DE;
+  --mid:#3F6FB0; --mid-soft:#E0E9F6;
+  --shadow:0 1px 2px rgba(27,37,64,.06),0 6px 20px rgba(27,37,64,.07);
+  --display:"Secular One","Assistant",system-ui,sans-serif; --body:"Assistant",system-ui,"Segoe UI",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+.app{min-height:100vh;padding:20px max(16px,env(safe-area-inset-right)) 60px max(16px,env(safe-area-inset-left));
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;line-height:1.25;text-wrap:balance}
+h1{font-size:2rem}h2{font-size:1.5rem}h3{font-size:1.15rem}
+p{margin:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:24px}
+.muted{color:var(--muted)}.small{font-size:.9rem}
+.eyebrow{font-size:.82rem;letter-spacing:.06em;color:var(--muted);font-weight:700}
+button{font:inherit;cursor:pointer;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:10px 18px;font-weight:600;touch-action:manipulation}
+button:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 45%,transparent);outline-offset:2px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);padding:13px 28px;font-size:1.08rem}
+button.primary:disabled{opacity:.4;cursor:not-allowed}
+button.link{border:none;background:none;color:var(--muted);text-decoration:underline;padding:4px 6px;font-weight:400}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:1.15rem}
+.brand i{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;color:#fff;font-style:normal;font-size:1.1rem}
+/* home */
+.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:center}
+.hero .mosaic{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hero .mosaic img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px}
+@media (max-width:640px){.hero{grid-template-columns:1fr}.hero .mosaic{order:-1}}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.tcard{display:flex;flex-direction:column;text-align:start;padding:0;overflow:hidden;border-radius:14px;font-weight:400}
+.tcard img{width:100%;height:100px;object-fit:cover;display:block}
+.tcard .tb{padding:12px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.tcard b{font-family:var(--display);font-weight:400;font-size:1.1rem}
+.tcard.sel{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--paper);color:var(--muted)}
+.chip.ok{background:var(--good-soft);color:var(--good)}.chip.best{background:var(--mid-soft);color:var(--mid)}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+.seg button{border:none;border-radius:0;padding:10px 20px}
+.seg button.on{background:var(--accent);color:#fff}
+/* lesson */
+.lcard{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
+.lcard img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px}
+@media (max-width:640px){.lcard{grid-template-columns:1fr}}
+.lcard p{font-size:1.2rem;line-height:1.75}
+.dots{display:flex;gap:6px;justify-content:center}
+.dots span{width:10px;height:10px;border-radius:50%;background:var(--line)}.dots span.on{background:var(--accent)}
+/* quiz */
+.progress{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+.progress > div{height:100%;background:var(--accent);transition:width .3s}
+.qhead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.tag{font-size:.82rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.qtext{font-size:1.32rem;font-weight:700;line-height:1.5}
+.qimg{width:100%;max-height:260px;object-fit:cover;border-radius:12px}
+.passage{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:1.1rem;line-height:1.8}
+.passage b{font-family:var(--display);font-weight:400;display:block;margin-bottom:4px;color:var(--accent)}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.opt{display:flex;align-items:center;gap:10px;text-align:start;padding:14px 16px;font-size:1.12rem;font-weight:600;border-radius:12px}
+.opt .mk{flex:none;width:28px;height:28px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.85rem;color:var(--muted)}
+.opt.multi .mk{border-radius:7px}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}.opt.sel .mk{background:var(--accent);border-color:var(--accent);color:#fff}
+.opt.right{border-color:var(--good);background:var(--good-soft)}.opt.right .mk{background:var(--good);border-color:var(--good);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}.opt.wrong .mk{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt.missed{border-style:dashed;border-color:var(--good)}
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:52px;padding:10px;border:1.5px dashed var(--line);border-radius:12px;background:var(--paper)}
+.tok{padding:9px 14px;border-radius:10px;background:var(--card);border:1.5px solid var(--line);font-weight:700;font-size:1.05rem;user-select:none;touch-action:none;cursor:grab}
+.tok.sel{border-color:var(--accent);background:var(--accent-soft)}
+.tok.right{border-color:var(--good);background:var(--good-soft)}.tok.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.tok.ghost{position:fixed;pointer-events:none;z-index:50;box-shadow:var(--shadow);opacity:.95}
+.buckets{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bucket{border:2px solid var(--line);border-radius:14px;padding:10px;min-height:140px;display:flex;flex-direction:column;gap:8px;background:var(--card)}
+.bucket h3{text-align:center;color:var(--accent)}
+.bucket.hover{border-color:var(--accent);background:var(--accent-soft)}
+.bucket .in{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}
+.sentence{font-size:1.25rem;line-height:2.4}
+.blank{display:inline-block;min-width:110px;padding:2px 12px;margin:0 4px;border-bottom:2.5px solid var(--ink);text-align:center;font-weight:700;cursor:pointer;border-radius:6px 6px 0 0}
+.blank.act{background:var(--accent-soft)}.blank.right{color:var(--good);border-color:var(--good)}.blank.wrong{color:var(--bad);border-color:var(--bad)}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+.match .col{display:flex;flex-direction:column;gap:10px}
+.mt{padding:12px 14px;border-radius:12px;font-weight:700;text-align:center;font-size:1.05rem}
+.mt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.mt.p0{border-color:#3F6FB0;background:#E0E9F6}.mt.p1{border-color:#A8701A;background:#F7ECD8}.mt.p2{border-color:#7A4FB0;background:#EDE4F8}.mt.p3{border-color:#2F8A4E;background:#E1F2E6}
+.mt .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-size:.75rem;margin-inline-end:6px}
+.slots{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.slot{min-width:120px;min-height:48px;border:2px dashed var(--line);border-radius:12px;display:grid;place-items:center;padding:6px 10px;font-weight:700;cursor:pointer;background:var(--card)}
+.slot.filled{border-style:solid;border-color:var(--accent)}
+.slot.right{border-color:var(--good);background:var(--good-soft)}.slot.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.arrow{font-size:1.4rem;color:var(--muted)}
+textarea{font:inherit;width:100%;min-height:110px;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;resize:vertical;color:var(--ink);background:var(--card)}
+.fb{border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;font-size:1.08rem}
+.fb.good{background:var(--good-soft);border:1.5px solid var(--good)}.fb.part{background:var(--warn-soft);border:1.5px solid var(--warn)}.fb.bad{background:var(--bad-soft);border:1.5px solid var(--bad)}
+.fb b.h{font-family:var(--display);font-weight:400;font-size:1.25rem}
+.fb.good b.h{color:var(--good)}.fb.part b.h{color:var(--warn)}.fb.bad b.h{color:var(--bad)}
+.hint{font-size:.92rem;color:var(--muted)}
+.score{font-family:var(--display);font-size:3.4rem;color:var(--accent);line-height:1}
+.stars{font-size:2rem;letter-spacing:4px}
+.tbl{width:100%;border-collapse:collapse;font-size:1rem}
+.tbl td{padding:8px 6px;border-bottom:1px solid var(--line)}
+.credits{font-size:.85rem;color:var(--muted);columns:2;column-gap:20px}
+@media (max-width:520px){.card{padding:18px}.qtext{font-size:1.18rem}.buckets{grid-template-columns:1fr 1fr}.credits{columns:1}}
+@media (prefers-reduced-motion:no-preference){.fade{animation:fade .25s ease-out}@keyframes fade{from{opacity:.3;transform:translateY(5px)}to{opacity:1;transform:none}}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><i>🌿</i>משאבי טבע · כיתה ה׳</div>
+    <button class="link" id="homeBtn" hidden>לדף הבית</button>
+  </div>
+
+  <!-- HOME -->
+  <section id="home" class="wrap" style="max-width:none">
+    <div class="card hero fade">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <span class="eyebrow">בית הלומד "בורוכוב" · מדע וטכנולוגיה</span>
+        <h1>מתרגלים למבחן: משאבי טבע</h1>
+        <p class="muted">בחרו נושא. לפני התרגול יש הסבר קצר על המושגים. בכל תרגול מקבלים שאלות אחרות, ואחרי כל תשובה רואים אם צדקתם ולמה.</p>
+      </div>
+      <div class="mosaic"><img src="img/solar.jpg" alt="לוחות סולאריים"><img src="img/fish.jpg" alt="להקת דגים"><img src="img/coal.jpg" alt="פחם"><img src="img/forest.jpg" alt="יער"></div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;gap:14px">
+      <h2>1. בחרו נושא</h2>
+      <div class="topics" id="topicGrid"></div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;gap:14px">
+      <h2>2. כמה שאלות?</h2>
+      <div class="seg" id="lenSeg"></div>
+      <p class="small muted" id="lenNote"></p>
+      <div class="row">
+        <button class="primary" id="startBtn" disabled>בחרו נושא כדי להתחיל</button>
+        <button class="link" id="lessonBtn" hidden>רק ההסבר על הנושא</button>
+      </div>
+    </div>
+    <p class="small muted" style="text-align:center"><button class="link" id="creditsBtn">קרדיט לתמונות</button></p>
+  </section>
+
+  <!-- LESSON -->
+  <section id="lesson" hidden>
+    <div class="card fade" style="display:flex;flex-direction:column;gap:16px" id="lessonCard"></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" hidden style="display:flex;flex-direction:column;gap:12px">
+    <div class="progress"><div id="bar" style="width:0"></div></div>
+    <div class="card fade" id="qcard" style="display:flex;flex-direction:column;gap:16px"></div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section id="summary" hidden>
+    <div class="card fade" id="sumCard" style="display:flex;flex-direction:column;gap:16px;align-items:center;text-align:center"></div>
+  </section>
+
+  <!-- CREDITS -->
+  <section id="credits" hidden>
+    <div class="card" style="display:flex;flex-direction:column;gap:12px">
+      <h2>קרדיט לתמונות</h2>
+      <p class="small muted">כל התמונות מאתר Unsplash, ומותרות לשימוש חינמי.</p>
+      <div class="credits" id="creditList"></div>
+      <div><button id="creditsBack">חזרה</button></div>
+    </div>
+  </section>
+</div>
+</div>
+
+<script src="data.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const LET=["א","ב","ג","ד","ה","ו"];
+const topicById=id=>TOPICS.find(t=>t.id===id);
+const ALL={id:"all",title:"כל הנושאים",img:"river"};
+
+/* ---------- storage (per student device) ---------- */
+const KEY="science-resources.v1";
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return {};}}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
+let store=load(); store.lessons=store.lessons||{}; store.best=store.best||{}; store.seen=store.seen||{};
+
+/* ---------- screens ---------- */
+function show(id){for(const s of ["home","lesson","quiz","summary","credits"]) $("#"+s).hidden=(s!==id); $("#homeBtn").hidden=(id==="home"); window.scrollTo(0,0);}
+$("#homeBtn").onclick=()=>{renderHome();show("home");};
+
+/* ---------- home ---------- */
+let selTopic=null, selLen=10;
+function countFor(id){return id==="all"?BANK.length:BANK.filter(q=>q.t===id).length;}
+function renderHome(){
+  const g=$("#topicGrid"); g.innerHTML="";
+  for(const t of [...TOPICS,ALL]){
+    const b=document.createElement("button"); b.className="tcard"+(selTopic===t.id?" sel":"");
+    const chips=[];
+    if(t.cards&&t.cards.length&&store.lessons[t.id]) chips.push('<span class="chip ok">✓ ההסבר נלמד</span>');
+    if(store.best[t.id]!=null) chips.push(`<span class="chip best">שיא: ${store.best[t.id]}%</span>`);
+    chips.push(`<span class="chip">${countFor(t.id)} שאלות</span>`);
+    b.innerHTML=`<img src="img/${t.img}.jpg" alt=""><div class="tb"><b>${esc(t.title)}</b><div class="chips">${chips.join("")}</div></div>`;
+    b.onclick=()=>{selTopic=t.id;renderHome();};
+    g.appendChild(b);
+  }
+  const max=selTopic?countFor(selTopic):20;
+  const lens=[10,15,20];
+  const seg=$("#lenSeg"); seg.innerHTML="";
+  for(const n of lens){const bt=document.createElement("button"); bt.textContent=n; bt.className=selLen===n?"on":""; bt.onclick=()=>{selLen=n;renderHome();}; seg.appendChild(bt);}
+  $("#lenNote").textContent= selTopic && max<selLen ? `בנושא הזה יש ${max} שאלות, אז התרגול יכלול את כולן בסדר אחר.` : "";
+  const sb=$("#startBtn"); sb.disabled=!selTopic;
+  const t=selTopic&&(selTopic==="all"?ALL:topicById(selTopic));
+  const hasLesson=t&&t.cards&&t.cards.length;
+  sb.textContent=!selTopic?"בחרו נושא כדי להתחיל":(hasLesson&&!store.lessons[selTopic]?"התחילו: הסבר ואז תרגול":"התחילו לתרגל");
+  $("#lessonBtn").hidden=!(hasLesson&&store.lessons[selTopic]);
+}
+$("#startBtn").onclick=()=>{const t=selTopic==="all"?ALL:topicById(selTopic); if(t.cards&&t.cards.length&&!store.lessons[t.id]) startLesson(t.id,true); else startQuiz();};
+$("#lessonBtn").onclick=()=>startLesson(selTopic,false);
+
+/* ---------- lesson ---------- */
+let L=null;
+function startLesson(id,thenQuiz){L={t:topicById(id),i:0,thenQuiz,checked:false};renderLesson();show("lesson");}
+function renderLesson(){
+  const {t,i}=L, c=$("#lessonCard"), n=t.cards.length;
+  if(i<n){
+    const k=t.cards[i];
+    c.innerHTML=`<div class="qhead"><span class="tag">הסבר · ${esc(t.title)}</span><span class="small muted">כרטיס ${i+1} מתוך ${n+1}</span></div>
+      <div class="lcard"><div style="display:flex;flex-direction:column;gap:10px"><h2>${esc(k.title)}</h2><p>${k.text}</p></div><img src="img/${k.img}.jpg" alt=""></div>
+      <div class="dots">${Array.from({length:n+1},(_,j)=>`<span class="${j===i?"on":""}"></span>`).join("")}</div>
+      <div class="row" style="justify-content:space-between"><button class="link" id="skip">דלגו לתרגול</button><div class="row">${i>0?'<button id="prev">הקודם</button>':""}<button class="primary" id="next">הבא</button></div></div>`;
+    $("#next").onclick=()=>{L.i++;renderLesson();};
+    if(i>0) $("#prev").onclick=()=>{L.i--;renderLesson();};
+    $("#skip").onclick=()=>{selTopic=t.id;startQuiz();};
+  } else {
+    const ch=t.check;
+    c.innerHTML=`<div class="qhead"><span class="tag">בדיקת הבנה · ${esc(t.title)}</span><span class="small muted">כרטיס ${n+1} מתוך ${n+1}</span></div>
+      <div class="qtext">${esc(ch.q)}</div><div class="opts" id="chk"></div><div id="chkfb"></div>
+      <div class="row" style="justify-content:space-between"><button id="prev">חזרה להסבר</button><button class="primary" id="go" disabled>לתרגול</button></div>`;
+    const box=$("#chk");
+    ch.options.forEach((o,j)=>{const b=document.createElement("button"); b.className="opt"; b.innerHTML=`<span class="mk">${LET[j]}</span>${esc(o)}`;
+      b.onclick=()=>{if(L.checked) return; L.checked=true;
+        [...box.children].forEach((x,m)=>{x.disabled=true; if(m===ch.answer) x.classList.add("right"); else if(m===j) x.classList.add("wrong");});
+        const ok=j===ch.answer; $("#chkfb").innerHTML=`<div class="fb ${ok?"good":"bad"}"><b class="h">${ok?"נכון!":"לא בדיוק"}</b><span>${esc(ch.explain)}</span></div>`;
+        $("#go").disabled=false; store.lessons[t.id]=true; save(store);};
+      box.appendChild(b);});
+    $("#prev").onclick=()=>{L.i=0;L.checked=false;renderLesson();};
+    $("#go").onclick=()=>{selTopic=t.id;startQuiz();};
+  }
+}
+
+/* ---------- quiz ---------- */
+let Q=null;
+function pickQuestions(topic,n){
+  let pool=topic==="all"?BANK.slice():BANK.filter(q=>q.t===topic);
+  // prefer questions this device has seen least
+  pool=shuffle(pool).sort((a,b)=>(store.seen[qid(a)]||0)-(store.seen[qid(b)]||0));
+  let pick=pool.slice(0,Math.min(n,pool.length));
+  // keep reading questions of the same passage together
+  pick=shuffle(pick).sort((a,b)=>(a.passage?1:0)-(b.passage?1:0)||(a.passage||"").localeCompare(b.passage||""));
+  return pick;
+}
+function qid(q){return BANK.indexOf(q);}
+function startQuiz(){
+  const list=pickQuestions(selTopic,selLen);
+  Q={topic:selTopic,list,i:0,score:0,results:[]};
+  for(const q of list){store.seen[qid(q)]=(store.seen[qid(q)]||0)+1;} save(store);
+  renderQ(); show("quiz");
+}
+const TYPE_NAME={mc:"בחירה",tf:"נכון / לא נכון",multi:"סמנו את כל הנכונות",odd:"יוצא דופן",sort:"מיון",fill:"השלמה",match:"התאמה",order:"סידור",open:"תשובה פתוחה"};
+let cur=null;
+function renderQ(){
+  const q=Q.list[Q.i], c=$("#qcard");
+  $("#bar").style.width=(Q.i/Q.list.length*100)+"%";
+  const t=topicById(q.t);
+  let html=`<div class="qhead"><span class="tag">${esc(t.title)} · ${TYPE_NAME[q.type]}</span><span class="small muted">שאלה ${Q.i+1} מתוך ${Q.list.length}</span></div>`;
+  if(q.passage){const p=PASSAGES[q.passage]; html+=`<div class="passage"><b>${esc(p.title)}</b>${esc(p.text)}</div>`;}
+  else if(q.img) html+=`<img class="qimg" src="img/${q.img}.jpg" alt="">`;
+  html+=`<div class="qtext">${esc(q.q)}</div><div id="area"></div><div id="fbox"></div>
+    <div class="row" style="justify-content:space-between"><span class="hint" id="hint"></span><button class="primary" id="act" disabled>בדיקה</button></div>`;
+  c.innerHTML=html;
+  cur={q,done:false,check:null,ready:()=>false};
+  BUILD[q.type](q,$("#area"));
+  $("#act").onclick=()=>{ if(!cur.done){const r=cur.check(); finish(r);} else next(); };
+}
+function setReady(v){ if(!cur.done) $("#act").disabled=!v; }
+function finish(r){
+  cur.done=true; Q.score+=r.score; Q.results.push({q:cur.q,score:r.score});
+  const cls=r.score>=1?"good":r.score>0?"part":"bad";
+  const head=r.score>=1?"נכון, כל הכבוד!":r.score>0?"נכון חלקית":"לא נכון";
+  const t=topicById(cur.q.t);
+  $("#fbox").innerHTML=`<div class="fb ${cls} fade"><b class="h">${head}</b>${r.msg?`<span>${r.msg}</span>`:""}<span>${esc(cur.q.explain)}</span>
+    ${r.score<1&&t.cards&&t.cards.length?`<button class="link" style="align-self:flex-start;padding:0" id="relearn">לחזור להסבר על "${esc(t.title)}"</button>`:""}</div>`;
+  const rl=$("#relearn"); if(rl) rl.onclick=()=>startLesson(t.id,false);
+  const a=$("#act"); a.disabled=false; a.textContent=Q.i+1<Q.list.length?"לשאלה הבאה":"לסיכום";
+  $("#hint").textContent="";
+}
+function next(){Q.i++; if(Q.i<Q.list.length) renderQ(); else summary();}
+
+/* ---------- builders ---------- */
+const BUILD={};
+function optionList(q,area,multi){
+  const order=q.type==="tf"?[0,1]:shuffle(q.options.map((_,i)=>i));
+  const opts=q.type==="tf"?["נכון","לא נכון"]:q.options;
+  const box=document.createElement("div"); box.className="opts"; area.appendChild(box);
+  const sel=new Set();
+  order.forEach((oi,pos)=>{const b=document.createElement("button"); b.className="opt"+(multi?" multi":""); b.dataset.oi=oi;
+    b.innerHTML=`<span class="mk">${multi?"":LET[pos]}</span>${esc(opts[oi])}`;
+    b.onclick=()=>{ if(cur.done) return; if(multi){sel.has(oi)?sel.delete(oi):sel.add(oi);} else {sel.clear();sel.add(oi);}
+      [...box.children].forEach(x=>{const on=sel.has(+x.dataset.oi); x.classList.toggle("sel",on); if(multi) x.querySelector(".mk").textContent=on?"✓":"";});
+      setReady(sel.size>0);};
+    box.appendChild(b);});
+  return {box,sel};
+}
+BUILD.mc=BUILD.odd=(q,area)=>{const {box,sel}=optionList(q,area,false);
+  cur.check=()=>{const v=[...sel][0]; [...box.children].forEach(x=>{const oi=+x.dataset.oi; x.disabled=true; x.classList.remove("sel"); if(oi===q.answer) x.classList.add("right"); else if(oi===v) x.classList.add("wrong");}); return {score:v===q.answer?1:0};};};
+BUILD.tf=(q,area)=>{const {box,sel}=optionList(q,area,false); const ans=q.answer?0:1;
+  cur.check=()=>{const v=[...sel][0]; [...box.children].forEach(x=>{const oi=+x.dataset.oi; x.disabled=true; x.classList.remove("sel"); if(oi===ans) x.classList.add("right"); else if(oi===v) x.classList.add("wrong");}); return {score:v===ans?1:0};};};
+BUILD.multi=(q,area)=>{const {box,sel}=optionList(q,area,true); $("#hint").textContent="אפשר לסמן יותר מתשובה אחת.";
+  cur.check=()=>{const A=new Set(q.answer); let hit=0,wrong=0;
+    [...box.children].forEach(x=>{const oi=+x.dataset.oi; x.disabled=true; x.classList.remove("sel"); const s=sel.has(oi);
+      if(s&&A.has(oi)){x.classList.add("right");hit++;} else if(s){x.classList.add("wrong");wrong++;} else if(A.has(oi)) x.classList.add("missed");});
+    const score=Math.max(0,(hit-wrong)/A.size); return {score:score>=1?1:Math.round(score*2)/2, msg:score<1?"התשובות עם המסגרת המקווקוות הן תשובות נכונות שלא סימנתם.":""};};};
+
+/* drag + tap tokens */
+let tapSel=null, drag=null;
+function makeToken(text,onDrop){
+  const el=document.createElement("div"); el.className="tok"; el.textContent=text;
+  el.addEventListener("pointerdown",e=>{ if(cur.done) return; e.preventDefault();
+    const sx=e.clientX, sy=e.clientY; let moved=false, ghost=null;
+    const move=ev=>{ if(!moved && Math.hypot(ev.clientX-sx,ev.clientY-sy)>8){moved=true; ghost=el.cloneNode(true); ghost.classList.add("ghost"); document.body.appendChild(ghost);}
+      if(moved){ghost.style.left=(ev.clientX-ghost.offsetWidth/2)+"px"; ghost.style.top=(ev.clientY-ghost.offsetHeight/2)+"px";
+        document.querySelectorAll(".bucket").forEach(b=>b.classList.remove("hover")); const t=document.elementFromPoint(ev.clientX,ev.clientY); const bk=t&&t.closest(".bucket"); if(bk) bk.classList.add("hover");}};
+    const up=ev=>{window.removeEventListener("pointermove",move); window.removeEventListener("pointerup",up);
+      document.querySelectorAll(".bucket").forEach(b=>b.classList.remove("hover"));
+      if(moved){ghost.remove(); const t=document.elementFromPoint(ev.clientX,ev.clientY); const bk=t&&t.closest(".bucket,.pool"); if(bk) onDrop(el,bk); }
+      else { if(tapSel===el){el.classList.remove("sel"); tapSel=null;} else { if(tapSel) tapSel.classList.remove("sel"); tapSel=el; el.classList.add("sel"); } } };
+    window.addEventListener("pointermove",move); window.addEventListener("pointerup",up);});
+  return el;
+}
+BUILD.sort=(q,area)=>{
+  $("#hint").textContent="גררו כל מילה לעמודה הנכונה, או לחצו על מילה ואז על העמודה.";
+  const pool=document.createElement("div"); pool.className="pool"; area.appendChild(pool);
+  const bw=document.createElement("div"); bw.className="buckets"; bw.style.marginTop="10px"; area.appendChild(bw);
+  const bks=q.buckets.map((name,i)=>{const b=document.createElement("div"); b.className="bucket"; b.dataset.i=i; b.innerHTML=`<h3>${esc(name)}</h3><div class="in"></div>`; bw.appendChild(b); return b;});
+  const place=(el,target)=>{ (target.classList.contains("pool")?target:target.querySelector(".in")).appendChild(el); el.classList.remove("sel"); tapSel=null; setReady(pool.children.length===0); };
+  [...bks,pool].forEach(b=>b.addEventListener("click",e=>{ if(cur.done||!tapSel||e.target.closest(".tok")) return; place(tapSel,b);}));
+  shuffle(q.items).forEach(([w,bi])=>{const el=makeToken(w,place); el.dataset.b=bi; pool.appendChild(el);});
+  cur.check=()=>{let ok=0; bks.forEach((b,i)=>b.querySelectorAll(".tok").forEach(t=>{const r=+t.dataset.b===i; t.classList.add(r?"right":"wrong"); if(r) ok++; }));
+    const s=ok/q.items.length; return {score:s>=1?1:Math.round(s*2)/2, msg:s<1?`מיינתם נכון ${ok} מתוך ${q.items.length}.`:""};};
+};
+BUILD.fill=(q,area)=>{
+  $("#hint").textContent="לחצו על מילה ממחסן המילים כדי לשבץ אותה. לחיצה על מקום מלא מחזירה את המילה.";
+  const parts=q.text.split(/\{(\d)\}/); const s=document.createElement("div"); s.className="sentence"; const blanks=[];
+  parts.forEach((p,i)=>{ if(i%2===0) s.appendChild(document.createTextNode(p)); else {const b=document.createElement("span"); b.className="blank"; b.innerHTML="&nbsp;"; b.dataset.i=p; blanks[+p]=b; s.appendChild(b);} });
+  area.appendChild(s);
+  const pool=document.createElement("div"); pool.className="pool"; pool.style.marginTop="10px"; area.appendChild(pool);
+  let active=0; const mark=()=>blanks.forEach((b,i)=>b.classList.toggle("act",i===active&&!cur.done));
+  const vals=blanks.map(()=>null);
+  const refresh=()=>{ blanks.forEach((b,i)=>{b.textContent=vals[i]||" ";}); active=vals.findIndex(v=>!v); mark(); setReady(vals.every(Boolean)); };
+  blanks.forEach((b,i)=>b.onclick=()=>{ if(cur.done) return; if(vals[i]){ const w=vals[i]; vals[i]=null; [...pool.children].find(x=>x.textContent===w&&x.hidden).hidden=false; } active=i; refresh(); if(!vals[i]){active=i;mark();} });
+  shuffle(q.bank).forEach(w=>{const t=document.createElement("button"); t.className="tok"; t.textContent=w; t.style.cursor="pointer";
+    t.onclick=()=>{ if(cur.done) return; let i=active>=0&&!vals[active]?active:vals.findIndex(v=>!v); if(i<0) return; vals[i]=w; t.hidden=true; refresh(); }; pool.appendChild(t);});
+  refresh();
+  cur.check=()=>{let ok=0; blanks.forEach((b,i)=>{const r=vals[i]===q.answer[i]; b.classList.add(r?"right":"wrong"); if(r) ok++; else b.textContent=`${vals[i]} ← ${q.answer[i]}`;}); mark();
+    const sc=ok/blanks.length; return {score:sc>=1?1:Math.round(sc*2)/2, msg:sc<1?"ליד כל מילה שגויה מופיעה המילה הנכונה.":""};};
+};
+BUILD.match=(q,area)=>{
+  $("#hint").textContent="לחצו על פריט מימין ואז על הפריט המתאים משמאל.";
+  const m=document.createElement("div"); m.className="match"; const L1=document.createElement("div"), R1=document.createElement("div"); L1.className=R1.className="col"; m.append(L1,R1); area.appendChild(m);
+  const n=q.pairs.length; const pairOf=new Array(n).fill(null); let selL=null;
+  const lefts=q.pairs.map((p,i)=>{const b=document.createElement("button"); b.className="mt"; b.textContent=p[0]; b.dataset.i=i; L1.appendChild(b); return b;});
+  const rightsOrder=shuffle(q.pairs.map((_,i)=>i));
+  const rights=[]; rightsOrder.forEach(i=>{const b=document.createElement("button"); b.className="mt"; b.textContent=q.pairs[i][1]; b.dataset.i=i; R1.appendChild(b); rights[i]=b;});
+  const paint=()=>{ lefts.forEach((b,i)=>{b.className="mt"+(selL===i?" sel":""); b.innerHTML=esc(q.pairs[i][0]); if(pairOf[i]!=null){b.classList.add("p"+(i%4));}});
+    rights.forEach(b=>{b.className="mt"; b.innerHTML=esc(q.pairs[+b.dataset.i][1]);});
+    pairOf.forEach((r,i)=>{ if(r!=null){ rights[r].classList.add("p"+(i%4)); } });
+    setReady(pairOf.every(v=>v!=null)); };
+  lefts.forEach((b,i)=>b.onclick=()=>{ if(cur.done) return; selL=(selL===i?null:i); if(pairOf[i]!=null&&selL===i){pairOf[i]=null;} paint(); });
+  rights.forEach(b=>b.onclick=()=>{ if(cur.done||selL==null) return; const r=+b.dataset.i; const prev=pairOf.indexOf(r); if(prev>=0) pairOf[prev]=null; pairOf[selL]=r; selL=null; paint(); });
+  paint();
+  cur.check=()=>{let ok=0; lefts.forEach((b,i)=>{const r=pairOf[i]===i; if(r) ok++; b.className="mt "+(r?"right":"wrong"); b.style.borderColor=r?"var(--good)":"var(--bad)"; b.style.background=r?"var(--good-soft)":"var(--bad-soft)"; if(!r) b.innerHTML=`${esc(q.pairs[i][0])} <span class="small">→ ${esc(q.pairs[i][1])}</span>`;});
+    rights.forEach(b=>{b.disabled=true; b.className="mt";}); lefts.forEach(b=>b.disabled=true);
+    const s=ok/n; return {score:s>=1?1:Math.round(s*2)/2, msg:s<1?`התאמתם נכון ${ok} מתוך ${n}. בפריטים האדומים מופיעה ההתאמה הנכונה.`:""};};
+};
+BUILD.order=(q,area)=>{
+  $("#hint").textContent="לחצו על הפריטים לפי הסדר הנכון. לחיצה על משבצת מלאה מרוקנת אותה.";
+  const n=q.items.length; const slotsEl=document.createElement("div"); slotsEl.className="slots"; area.appendChild(slotsEl);
+  const vals=new Array(n).fill(null); const slots=[];
+  for(let i=0;i<n;i++){ if(i) {const a=document.createElement("span"); a.className="arrow"; a.textContent="←"; slotsEl.appendChild(a);} const s=document.createElement("button"); s.className="slot"; slots.push(s); slotsEl.appendChild(s);
+    s.onclick=()=>{ if(cur.done||vals[i]==null) return; toks[vals[i]].hidden=false; vals[i]=null; paint(); }; }
+  const pool=document.createElement("div"); pool.className="pool"; pool.style.marginTop="12px"; area.appendChild(pool);
+  const toks=[]; shuffle(q.items.map((_,i)=>i)).forEach(i=>{const t=document.createElement("button"); t.className="tok"; t.style.cursor="pointer"; t.textContent=q.items[i]; toks[i]=t;
+    t.onclick=()=>{ if(cur.done) return; const k=vals.indexOf(null); if(k<0) return; vals[k]=i; t.hidden=true; paint(); }; pool.appendChild(t);});
+  const paint=()=>{ slots.forEach((s,i)=>{ s.textContent=vals[i]==null?"?":q.items[vals[i]]; s.classList.toggle("filled",vals[i]!=null);}); setReady(vals.every(v=>v!=null)); };
+  paint();
+  cur.check=()=>{let ok=0; slots.forEach((s,i)=>{const r=vals[i]===i; if(r) ok++; s.classList.add(r?"right":"wrong"); s.disabled=true;});
+    return {score:ok===n?1:0, msg:ok<n?`הסדר הנכון: ${q.items.join(" ← ")}.`:""};};
+};
+const normalize=s=>s.replace(/[֑-ׇ]/g,"").replace(/[^א-ת a-z0-9]/gi," ");
+BUILD.open=(q,area)=>{
+  $("#hint").textContent="כתבו לפחות משפט שלם אחד (6 מילים ומעלה), והשתמשו במושגים שלמדנו.";
+  const ta=document.createElement("textarea"); ta.placeholder="כתבו כאן את התשובה…"; area.appendChild(ta);
+  const cnt=document.createElement("div"); cnt.className="small muted"; area.appendChild(cnt);
+  const words=()=>normalize(ta.value).split(/\s+/).filter(w=>w.length>0).length;
+  ta.oninput=()=>{const w=words(); cnt.textContent=`${w} מילים`; setReady(w>0);};
+  cur.check=()=>{ ta.disabled=true; const w=words(); const txt=" "+normalize(ta.value)+" ";
+    const used=q.concepts.filter(c=>txt.includes(c)); const longEnough=w>=6, hasConcept=used.length>0;
+    const score=longEnough&&hasConcept?1:(longEnough||hasConcept?0.5:0);
+    const notes=[]; if(!longEnough) notes.push("התשובה קצרה מדי. כתבו משפט מלא של 6 מילים לפחות."); if(!hasConcept) notes.push("לא השתמשתם במושג מרכזי מהנושא.");
+    return {score, msg:`${notes.join(" ")}${notes.length?"<br>":""}<b>תשובה לדוגמה:</b> ${esc(q.sample)}`}; };
+};
+
+/* ---------- summary ---------- */
+function summary(){
+  $("#bar").style.width="100%";
+  const pct=Math.round(Q.score/Q.list.length*100);
+  if(store.best[Q.topic]==null||pct>store.best[Q.topic]) store.best[Q.topic]=pct; save(store);
+  const stars=pct>=90?3:pct>=70?2:pct>=40?1:0;
+  const byTopic={}; for(const r of Q.results){const k=r.q.t; byTopic[k]=byTopic[k]||{s:0,n:0}; byTopic[k].s+=r.score; byTopic[k].n++;}
+  const weak=Object.entries(byTopic).filter(([k,v])=>v.s/v.n<0.7&&k!=="reading").map(([k])=>topicById(k));
+  const rows=Object.entries(byTopic).map(([k,v])=>`<tr><td style="text-align:start">${esc(topicById(k).title)}</td><td>${Math.round(v.s/v.n*100)}%</td></tr>`).join("");
+  const msg=pct>=90?"מצוין! אתם מוכנים למבחן.":pct>=70?"עבודה טובה! עוד קצת תרגול וזה שם.":pct>=40?"התחלה טובה. כדאי לחזור על ההסברים ולתרגל שוב.":"כדאי לעבור שוב על ההסברים, ואז לנסות שוב.";
+  $("#sumCard").innerHTML=`<span class="eyebrow">סיום התרגול</span><div class="stars">${"★".repeat(stars)}${"☆".repeat(3-stars)}</div>
+    <div class="score">${pct}%</div><p style="font-size:1.2rem">${msg}</p>
+    ${Object.keys(byTopic).length>1?`<table class="tbl" style="max-width:420px">${rows}</table>`:""}
+    ${weak.length?`<p class="muted">כדאי לחזור על: ${weak.map(t=>`<button class="link" data-l="${t.id}" style="padding:0 4px">${esc(t.title)}</button>`).join(" · ")}</p>`:""}
+    <div class="row" style="justify-content:center"><button class="primary" id="again">תרגול חדש באותו נושא</button><button id="toHome">בחירת נושא אחר</button></div>`;
+  $("#again").onclick=()=>startQuiz();
+  $("#toHome").onclick=()=>{renderHome();show("home");};
+  document.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>startLesson(b.dataset.l,false));
+  show("summary");
+}
+
+/* ---------- credits ---------- */
+$("#creditsBtn").onclick=async()=>{ show("credits"); const box=$("#creditList");
+  try{const c=await (await fetch("img/credits.json")).json(); box.innerHTML=Object.values(c).map(x=>`<div>צילום: <a href="https://unsplash.com/@${encodeURIComponent(x.user)}" target="_blank" rel="noopener">${esc(x.name||x.user)}</a></div>`).join("");}
+  catch(e){box.textContent="Unsplash";} };
+$("#creditsBack").onclick=()=>show("home");
+
+renderHome(); show("home");
+</script>
+</body>
+</html>
